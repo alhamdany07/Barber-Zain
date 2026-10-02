@@ -45,21 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.data.local.entity.QueueStatus
-import com.example.ui.theme.BorderSubtleLight
-import com.example.ui.theme.PrimaryNavy
-import com.example.ui.theme.PrimaryNavyGradientEnd
-import com.example.ui.theme.PrimaryNavyLight
-import com.example.ui.theme.StatusCalled
-import com.example.ui.theme.StatusCalledBg
-import com.example.ui.theme.StatusCancelled
-import com.example.ui.theme.StatusCancelledBg
-import com.example.ui.theme.StatusCompleted
-import com.example.ui.theme.StatusCompletedBg
-import com.example.ui.theme.StatusInService
-import com.example.ui.theme.StatusInServiceBg
-import com.example.ui.theme.StatusWaiting
-import com.example.ui.theme.StatusWaitingBg
-import com.example.ui.theme.TintNavy
+import com.example.ui.theme.extendedColors
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
@@ -96,14 +82,14 @@ object Formatters {
  * Modern Flat & Soft Card:
  * - 24dp rounded corners
  * - Very soft diffuse elevation
- * - Subtle border to separate card cleanly from light background
+ * - Subtle border adapting to active theme and light/dark mode
  */
 @Composable
 fun SoftCard(
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 24.dp,
     elevation: Dp = 2.dp,
-    borderColor: Color = BorderSubtleLight,
+    borderColor: Color = MaterialTheme.extendedColors.borderSubtle,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
@@ -127,21 +113,27 @@ fun SoftCard(
 }
 
 /**
- * Gradient Hero Card for main highlight summaries (Total Omset)
+ * Gradient Hero Card for main highlight summaries (Total Omset / Total Gaji)
+ * Follows active theme primary to dynamic gradient end
  */
 @Composable
 fun HeroGradientCard(
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 24.dp,
     brush: Brush = Brush.linearGradient(
-        listOf(PrimaryNavy, PrimaryNavyLight, PrimaryNavyGradientEnd)
+        listOf(MaterialTheme.extendedColors.heroGradientStart, MaterialTheme.extendedColors.heroGradientEnd)
     ),
     content: @Composable () -> Unit
 ) {
     val shape = RoundedCornerShape(cornerRadius)
     Box(
         modifier = modifier
-            .shadow(4.dp, shape, ambientColor = PrimaryNavy.copy(alpha = 0.2f), spotColor = PrimaryNavy.copy(alpha = 0.25f))
+            .shadow(
+                4.dp,
+                shape,
+                ambientColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
+            )
             .clip(shape)
             .background(brush)
             .padding(20.dp)
@@ -151,13 +143,14 @@ fun HeroGradientCard(
 }
 
 /**
- * Icon inside a soft 10-15% tinted rounded box
+ * Icon inside a soft tinted rounded box
+ * Defaults to current active theme colors
  */
 @Composable
 fun TintedIconBox(
     icon: ImageVector,
-    iconColor: Color,
-    tintColor: Color,
+    iconColor: Color = MaterialTheme.colorScheme.primary,
+    tintColor: Color = MaterialTheme.colorScheme.primaryContainer,
     modifier: Modifier = Modifier,
     size: Dp = 44.dp,
     iconSize: Dp = 22.dp,
@@ -207,13 +200,13 @@ fun BarberTopAppBar(
                         modifier = Modifier
                             .size(42.dp)
                             .clip(CircleShape)
-                            .background(TintNavy),
+                            .background(MaterialTheme.colorScheme.primaryContainer),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.ContentCut,
                             contentDescription = null,
-                            tint = PrimaryNavy,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(22.dp)
                         )
                     }
@@ -255,12 +248,13 @@ fun BarberTopAppBar(
 
 @Composable
 fun QueueStatusChip(status: QueueStatus) {
+    val extColors = MaterialTheme.extendedColors
     val (text, bgColor, textColor) = when (status) {
-        QueueStatus.WAITING -> Triple("Menunggu", StatusWaitingBg, StatusWaiting)
-        QueueStatus.CALLED -> Triple("Dipanggil", StatusCalledBg, StatusCalled)
-        QueueStatus.IN_SERVICE -> Triple("Dilayani", StatusInServiceBg, StatusInService)
-        QueueStatus.COMPLETED -> Triple("Selesai", StatusCompletedBg, StatusCompleted)
-        QueueStatus.CANCELLED -> Triple("Batal", StatusCancelledBg, StatusCancelled)
+        QueueStatus.WAITING -> Triple("Menunggu", extColors.statusWaitingBg, extColors.statusWaiting)
+        QueueStatus.CALLED -> Triple("Dipanggil", extColors.statusCalledBg, extColors.statusCalled)
+        QueueStatus.IN_SERVICE -> Triple("Dilayani", extColors.statusInServiceBg, extColors.statusInService)
+        QueueStatus.COMPLETED -> Triple("Selesai", extColors.statusCompletedBg, extColors.statusCompleted)
+        QueueStatus.CANCELLED -> Triple("Batal", extColors.statusCancelledBg, extColors.statusCancelled)
     }
 
     Surface(
@@ -298,13 +292,13 @@ fun EmptyStateView(
             modifier = Modifier
                 .size(76.dp)
                 .clip(CircleShape)
-                .background(TintNavy),
+                .background(MaterialTheme.colorScheme.primaryContainer),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = PrimaryNavy,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(38.dp)
             )
         }

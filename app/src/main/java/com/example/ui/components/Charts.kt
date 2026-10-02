@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.PieChart
@@ -33,10 +32,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.theme.AccentAmber
-import com.example.ui.theme.PrimaryNavy
-import com.example.ui.theme.PrimaryNavyLight
-import com.example.ui.theme.TintNavy
+import com.example.ui.theme.extendedColors
 import kotlin.math.max
 
 data class BarChartItem(
@@ -49,8 +45,8 @@ data class BarChartItem(
 fun IncomeBarChart(
     items: List<BarChartItem>,
     modifier: Modifier = Modifier,
-    barColor: Color = PrimaryNavy,
-    peakColor: Color = AccentAmber
+    barColor: Color = MaterialTheme.colorScheme.primary,
+    peakColor: Color = MaterialTheme.extendedColors.warning
 ) {
     val totalRevenue = items.sumOf { it.value }
 
@@ -67,13 +63,13 @@ fun IncomeBarChart(
                 modifier = Modifier
                     .size(52.dp)
                     .clip(CircleShape)
-                    .background(TintNavy),
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.BarChart,
                     contentDescription = null,
-                    tint = PrimaryNavy,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(28.dp)
                 )
             }
@@ -93,6 +89,7 @@ fun IncomeBarChart(
     }
 
     val maxValue = max(items.maxOfOrNull { it.value } ?: 1.0, 1.0)
+    val baselineColor = MaterialTheme.colorScheme.outlineVariant
 
     Column(modifier = modifier.fillMaxWidth()) {
         Canvas(
@@ -107,9 +104,9 @@ fun IncomeBarChart(
             val spaceBetween = width / (barCount * 1.6f + 0.4f)
             val barWidth = spaceBetween * 0.9f
 
-            // Baseline guide line
+            // Baseline guide line adapting to theme
             drawLine(
-                color = Color(0xFFE2E8F0),
+                color = baselineColor,
                 start = Offset(0f, height),
                 end = Offset(width, height),
                 strokeWidth = 2f
@@ -178,13 +175,13 @@ fun CategoryDonutChart(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(TintNavy),
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.PieChart,
                     contentDescription = null,
-                    tint = PrimaryNavy,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(26.dp)
                 )
             }
