@@ -1,0 +1,6 @@
+{
+  "name": "Pangkas Zain",
+  "description": "Aplikasi Kasir POS & Antrian Barbershop offline untuk Pangkas Rambut Zain",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
